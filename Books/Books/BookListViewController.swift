@@ -18,6 +18,7 @@ class BookListViewController:UIViewController, DateSelectionProtocol {
     
     var loadingController:BookLoadingController?
     var dateSelectionController:BookDateSelectionController?
+    var emptyController:EmptyBookResultController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,16 +45,16 @@ class BookListViewController:UIViewController, DateSelectionProtocol {
     func fetchBooks() {
         self.showloader()
         viewModel.fetchBooks { (error:APIError?) in
-            DispatchQueue.main.async {
-                self.loadingController?.dismissLoader(animation: false)
+            DispatchQueue.main.async { [weak self] in
+                self?.loadingController?.dismissLoader(animation: false)
                 
-                if self.viewModel.currentDisplayList.count == 0 {
-                    self.showEmptyScreen()
+                if self?.viewModel.currentDisplayList.count == 0 {
+                    self?.showEmptyScreen()
                 } else {
-                    if self.viewModel.currentDisplayList.count > 0 {
-                        self.setupFilterView()
+                    if self?.viewModel.currentDisplayList.count ?? 0 > 0 {
+                        self?.setupFilterView()
                     }
-                    self.tableView.reloadData()
+                    self?.tableView.reloadData()
                 }
                 
                 
@@ -63,20 +64,33 @@ class BookListViewController:UIViewController, DateSelectionProtocol {
     
     func showloader() {
         
+        DispatchQueue.main.async {
+            
         guard let loadingViewController =  self.storyboard?.instantiateViewController(identifier: "BookLoadingController") as? BookLoadingController else { return }
         self.loadingController = loadingViewController
         self.present(loadingViewController, animated: true, completion: nil)
+        }
     }
     
-    func showEmptyScreen() {
+    @objc func showEmptyScreen() {
         
+        DispatchQueue.main.async {
+            
+        
+            if self.emptyController == nil {
         guard let loadingViewController =  self.storyboard?.instantiateViewController(identifier: "EmptyBookResultController") as? EmptyBookResultController else { return }
-        self.present(loadingViewController, animated: true, completion: nil)
+                self.emptyController = loadingViewController
+        }
+        
+            if self.emptyController != nil {
+                self.present(self.emptyController!, animated: true, completion: nil)
         
        let timer = Timer(fire: Date(), interval: 5, repeats: false) { (timer) in
-            loadingViewController.dismissLoader()
+        self.emptyController?.dismissLoader()
         }
         timer.fire()
+        }
+        }
     }
 
     
@@ -88,6 +102,10 @@ class BookListViewController:UIViewController, DateSelectionProtocol {
     }
     
     func setupFilterView() {
+        
+        for subView in searchFilterView.subviews {
+            subView.removeFromSuperview()
+        }
        
         var x:CGFloat = 0
 
@@ -157,11 +175,12 @@ class BookListViewController:UIViewController, DateSelectionProtocol {
         
         if dateSelectionController == nil {
         guard let loadingViewController =  self.storyboard?.instantiateViewController(identifier: "BookDateSelectionController") as? BookDateSelectionController else { return }
-        loadingViewController.delegate =  self
+       
         dateSelectionController = loadingViewController
         }
         
         if dateSelectionController != nil {
+            dateSelectionController?.delegate =  self
         self.present(dateSelectionController!, animated: true, completion: nil)
         }
     }
@@ -169,7 +188,11 @@ class BookListViewController:UIViewController, DateSelectionProtocol {
     func selectedDate(date:Date) {
         
         self.viewModel.currentDate =  date
-        dateSelectionController?.dismissLoader()
+        
+        if let presentedController = self.presentedViewController {
+            presentedController.dismiss(animated: false, completion: nil)
+        }
+        
         self.fetchBooks()
     }
 }

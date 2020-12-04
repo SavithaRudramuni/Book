@@ -44,20 +44,24 @@ class BookDateSelectionController:UIViewController {
 
     func setUpUI() {
         
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+       // self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         self.blockerView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         self.popUpView.backgroundColor =  UIColor.white
         self.popUpView.layer.masksToBounds = true
         self.popUpView.layer.cornerRadius =  5
         //self.datePicker.datePickerStyle =  UIDatePickerStyle.inline
         datePicker.backgroundColor = .white
-        self.datePicker.addTarget(self, action: #selector(dateSelectionAction), for: UIControl.Event.valueChanged)
+
         
         blockerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookDateSelectionController.closeAction(_:))))
     }
     
-    @objc func dateSelectionAction() {
-        delegate?.selectedDate(date: self.datePicker.date)
+    @IBAction @objc func dateSelectionAction() {
+        
+        
+        self.dismiss(animated: true) {
+            self.delegate?.selectedDate(date: self.datePicker.date)
+        }
     }
     
     func dismissLoader() {

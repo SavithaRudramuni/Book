@@ -42,7 +42,7 @@ class BookListViewModel {
     
     func getDateForRequest(date:Date)->String{
         
-        dateFormatter.dateFormat = "yyyy-mm-dd"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         //yyyy-mm-dd&
         return dateFormatter.string(from: date)
     }

@@ -330,6 +330,9 @@
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" translatesAutoresizingMaskIntoConstraints="NO" id="Dlh-N9-9qe">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <action selector="dateSelectionAction" destination="4bv-0V-FAe" eventType="valueChanged" id="Tgb-wT-tS1"/>
+                                        </connections>
                                     </datePicker>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
