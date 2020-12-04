@@ -1,4 +1,4 @@
-Proposed UI
+
 - A simple tableview with SearchBar. Use the fields: title, author, publisher, contributor, description only from the response to populate the tableview.
 - SearchBar allows to search in the current list (no network request, search only on already cached books list). User should be able to search by any of the parameters listed in table view i.e.: book title, author, publisher etc.
 - Change Date option on right navigation bar item to change the date.
